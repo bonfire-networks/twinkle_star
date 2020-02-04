@@ -23,4 +23,4 @@ be found at [https://hexdocs.pm/twinkle_star](https://hexdocs.pm/twinkle_star).
 
 ## License
 
-[MIT, see LICENSE](LICENSE)
+[LGPLv3, see LICENSE](LICENSE)
