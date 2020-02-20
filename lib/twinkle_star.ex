@@ -28,27 +28,36 @@ defmodule TwinkleStar do
 
   if Code.ensure_loaded?(:hackney) do
     @request_body_size 2048
+    @request_headers []
+    @request_body ""
 
     @doc """
     Attempt to fetch metadata from a URI, remote or local.
 
     iex> TwinkleStar.from_uri("https://upload.wikimedia.org/wikipedia/commons/a/a9/US_Airways_A319-132_LAS_N838AW.jpg")
     {:ok, %{media_type: "image/jpeg"}}
+    iex> TwinkleStar.from_uri("http://xkcd.com", follow_redirect: true)
+    {:ok, %{media_type: "text/html"}}
     """
-    @spec from_uri(URI.t() | binary) :: {:ok, map} | {:error, term}
-    def from_uri(uri) when is_binary(uri) do
+    @spec from_uri(URI.t() | binary, request_opts :: Keyword.t()) :: {:ok, map} | {:error, term}
+    def from_uri(uri, request_opts \\ [])
+
+    def from_uri(uri, opts) when is_binary(uri) do
       uri
       |> URI.parse()
-      |> from_uri()
+      |> from_uri(opts)
     end
 
-    def from_uri(%URI{} = uri) do
-      with {:ok, status, _headers, client} <- :hackney.get(URI.to_string(uri)),
+    def from_uri(%URI{} = uri, opts) do
+      with {:ok, status, _headers, client} <- fetch_remote(uri, opts),
            :ok <- response_status_ok(status),
            {:ok, data} <- :hackney.body(client, @request_body_size) do
         from_bytes(data)
       end
     end
+
+    defp fetch_remote(uri, opts),
+      do: :hackney.get(URI.to_string(uri), @request_headers, @request_body, opts)
 
     defp response_status_ok(status) when is_integer(status) do
       # FIXME: include error information or maybe just return the client
