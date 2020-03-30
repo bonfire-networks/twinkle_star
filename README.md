@@ -12,7 +12,7 @@ This package is not yet available on hex.pm, use git instead:
 ```elixir
 def deps do
   [
-    {:twinkle_star, git: "https://github.com/antoniskalou/twinkle_star"}
+    {:twinkle_star, git: "https://github.com/commonspub/twinkle_star"}
   ]
 end
 ```
