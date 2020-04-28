@@ -49,7 +49,8 @@ defmodule TwinkleStar do
     end
 
     def from_uri(%URI{} = uri, opts) do
-      with {:ok, status, _headers, client} <- fetch_remote(uri, opts),
+      with :ok <- validate_uri(uri),
+           {:ok, status, _headers, client} <- fetch_remote(uri, opts),
            :ok <- response_status_ok(status),
            {:ok, data} <- :hackney.body(client, @request_body_size) do
         from_bytes(data)
@@ -64,6 +65,14 @@ defmodule TwinkleStar do
       if status in 200..399,
         do: :ok,
         else: {:error, {:request_failed, status}}
+    end
+
+    defp validate_uri(%URI{scheme: scheme, host: host}) do
+      if scheme in ["http", "https"] and not is_nil(host) do
+        :ok
+      else
+        {:error, :invalid_uri_format}
+      end
     end
   end
 end
