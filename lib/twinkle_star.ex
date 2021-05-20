@@ -7,8 +7,18 @@ defmodule TwinkleStar do
   """
   @spec from_filepath(Path.t()) :: {:ok, map} | {:error, term}
   def from_filepath(path) when is_binary(path) do
-    with {:ok, media_type} <- TreeMagic.from_filepath(path) do
+    with {:ok, media_type} <- do_from_filepath(path) do
       {:ok, %{media_type: media_type}}
+    end
+  end
+
+  # TODO: move to behaviours and config
+  if Code.ensure_loaded?(TreeMagic) do
+    defp do_from_filepath(path), do: TreeMagic.from_filepath(path)
+  else
+    defp do_from_filepath(path) do
+      %{^path => info} = FileInfo.get_info(path)
+      {:ok, parse_file_info(info)}
     end
   end
 
@@ -21,10 +31,26 @@ defmodule TwinkleStar do
   """
   @spec from_bytes(binary) :: {:ok, map} | {:error, term}
   def from_bytes(bytes) do
-    media_type = TreeMagic.from_u8(bytes)
-
-    {:ok, %{media_type: media_type}}
+    {:ok, %{media_type: do_from_bytes(bytes)}}
   end
+
+  if Code.ensure_loaded?(TreeMagic) do
+    defp do_from_bytes(bytes), do: TreeMagic.from_u8(bytes)
+  else
+    defp do_from_bytes(bytes) do
+      # file_info doesn't support reading directly from bytes, so we write a temp file
+      tmp_file = Path.join([
+        System.tmp_dir!(), "twinke_star_bytes-#{System.monotonic_time()}"
+      ])
+
+      File.write!(tmp_file, bytes, [:binary, :write])
+      %{^tmp_file => info} = FileInfo.get_info(tmp_file)
+      File.rm(tmp_file)
+      parse_file_info(info)
+    end
+  end
+
+  defp parse_file_info(%FileInfo.Mime{} = mime), do: "#{mime.type}/#{mime.subtype}"
 
   if Code.ensure_loaded?(:hackney) do
     @request_body_size 2048

@@ -21,7 +21,8 @@ defmodule TwinkleStar.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tree_magic, git: "https://github.com/commonspub/tree_magic.ex"},
+      {:file_info, "~> 0.0.4"},
+      {:tree_magic, git: "https://github.com/commonspub/tree_magic.ex", optional: true},
       {:hackney, "~> 1.15", optional: true}
     ]
   end
