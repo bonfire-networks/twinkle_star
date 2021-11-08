@@ -25,11 +25,7 @@ defmodule TwinkleStar do
   end
 
   defp media_plugin do
-    if Code.ensure_loaded?(TreeMagic) do
-      TwinkleStar.Plugin.TreeMagic
-    else
-      TwinkleStar.Plugin.FileInfo
-    end
+    Application.fetch_env!(:twinkle_star, :plugin)
   end
 
   if Code.ensure_loaded?(:hackney) do
