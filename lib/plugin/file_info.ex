@@ -1,9 +1,14 @@
 defmodule TwinkleStar.Plugin.FileInfo do
   use TwinkleStar.MediaTypePlugin
+  require Logger
 
   def from_filepath(path) when is_binary(path) do
     %{^path => info} = FileInfo.get_info(path)
     {:ok, parse_file_info(info)}
+  rescue
+    e in MimetypeParser.Exception ->
+      Logger.error(e)
+      {:error, "Cold not check mime type"}
   end
 
   def from_bytes(bytes) do
