@@ -45,7 +45,8 @@ defmodule TwinkleStar do
     iex> TwinkleStar.from_uri("http://xkcd.com", follow_redirect: true)
     {:ok, %{media_type: "text/html"}}
     """
-    @spec from_uri(URI.t() | binary, request_opts :: Keyword.t()) :: {:ok, map} | {:error, term}
+    @spec from_uri(URI.t() | binary, request_opts :: Keyword.t()) ::
+            {:ok, map} | {:error, term}
     def from_uri(uri, request_opts \\ [])
 
     def from_uri(uri, opts) when is_binary(uri) do
