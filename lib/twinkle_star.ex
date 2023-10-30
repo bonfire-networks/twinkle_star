@@ -1,5 +1,7 @@
 defmodule TwinkleStar do
-  @default_plugin TreeMagic
+  @default_plugin ExMarcel
+  @mod_path __DIR__
+  def fixtures_path, do: "#{@mod_path}/../test/fixtures/"
 
   def start(_type, _args) do
     opts = [strategy: :one_for_one, name: TwinkleStar.Supervisor]
@@ -14,7 +16,7 @@ defmodule TwinkleStar do
   @doc """
   Attempt to read metadata from a file on the local filesystem.
 
-  iex> TwinkleStar.from_filepath("test/fixtures/150.png")
+  iex> TwinkleStar.from_filepath(TwinkleStar.fixtures_path()<>"150.png")
   {:ok, %{media_type: "image/png"}}
   """
   @spec from_filepath(Path.t()) :: {:ok, map} | {:error, term}
@@ -27,7 +29,7 @@ defmodule TwinkleStar do
   @doc """
   Attempt to read metadata from raw bytes.
 
-  iex> bytes = File.read!("test/fixtures/150.png")
+  iex> bytes = File.read!(TwinkleStar.fixtures_path()<>"150.png")
   iex> TwinkleStar.from_bytes(bytes)
   {:ok, %{media_type: "image/png"}}
   """
@@ -104,4 +106,6 @@ defmodule TwinkleStar do
       end
     end
   end
+
+
 end

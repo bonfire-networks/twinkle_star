@@ -23,7 +23,7 @@ defmodule TwinkleStar.MixProject do
   defp deps do
     [
       {:file_info, "~> 0.0.4"},
-      {:ex_marcel, "~> 0.1.0"},
+      {:ex_marcel, "~> 0.1.0", optional: true},
       {:tree_magic,
        git: "https://github.com/bonfire-networks/tree_magic.ex", optional: true},
       {:hackney, "~> 1.15", optional: true}
