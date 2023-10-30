@@ -14,6 +14,7 @@ defmodule TwinkleStar.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {TwinkleStar, []},
       extra_applications: [:logger, :hackney]
     ]
   end
@@ -22,6 +23,7 @@ defmodule TwinkleStar.MixProject do
   defp deps do
     [
       {:file_info, "~> 0.0.4"},
+      {:ex_marcel, "~> 0.1.0"},
       {:tree_magic,
        git: "https://github.com/bonfire-networks/tree_magic.ex", optional: true},
       {:hackney, "~> 1.15", optional: true}

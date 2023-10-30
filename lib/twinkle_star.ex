@@ -1,4 +1,16 @@
 defmodule TwinkleStar do
+  @default_plugin TreeMagic
+
+  def start(_type, _args) do
+    opts = [strategy: :one_for_one, name: TwinkleStar.Supervisor]
+
+    children = if Application.get_env(:twinkle_star, :plugin, @default_plugin)==ExMarcel, do: [
+      ExMarcel.TableWrapper
+    ], else: []
+
+    Supervisor.start_link(children, opts)
+  end
+
   @doc """
   Attempt to read metadata from a file on the local filesystem.
 
@@ -25,10 +37,20 @@ defmodule TwinkleStar do
   end
 
   defp media_plugin do
-    if Code.ensure_loaded?(TreeMagic) do
-      TwinkleStar.Plugin.TreeMagic
-    else
-      TwinkleStar.Plugin.FileInfo
+    mod = Application.get_env(:twinkle_star, :plugin, @default_plugin)
+    cond do
+      mod==ExMarcel and 
+        Code.ensure_loaded?(ExMarcel) ->
+        TwinkleStar.Plugin.ExMarcel
+      mod==TreeMagic and 
+        Code.ensure_loaded?(TreeMagic) ->
+        TwinkleStar.Plugin.TreeMagic
+      Code.ensure_loaded?(ExMarcel) ->
+        TwinkleStar.Plugin.ExMarcel
+      Code.ensure_loaded?(TreeMagic) ->
+        TwinkleStar.Plugin.TreeMagic
+      true ->
+        TwinkleStar.Plugin.FileInfo
     end
   end
 

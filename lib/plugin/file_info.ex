@@ -8,7 +8,7 @@ defmodule TwinkleStar.Plugin.FileInfo do
   rescue
     e in MimetypeParser.Exception ->
       Logger.error(e)
-      {:error, "Cold not check mime type"}
+      {:error, "Could not check mime type"}
   end
 
   def from_bytes(bytes) do
