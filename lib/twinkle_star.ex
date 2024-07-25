@@ -16,8 +16,8 @@ defmodule TwinkleStar do
   @doc """
   Attempt to read metadata from a file on the local filesystem.
 
-  iex> TwinkleStar.from_filepath(TwinkleStar.fixtures_path()<>"150.png")
-  {:ok, %{media_type: "image/png"}}
+      iex> TwinkleStar.from_filepath(TwinkleStar.fixtures_path()<>"150.png")
+    {:ok, %{media_type: "image/png"}}
   """
   @spec from_filepath(Path.t()) :: {:ok, map} | {:error, term}
   def from_filepath(path) when is_binary(path) do
@@ -29,9 +29,9 @@ defmodule TwinkleStar do
   @doc """
   Attempt to read metadata from raw bytes.
 
-  iex> bytes = File.read!(TwinkleStar.fixtures_path()<>"150.png")
-  iex> TwinkleStar.from_bytes(bytes)
-  {:ok, %{media_type: "image/png"}}
+      iex> bytes = File.read!(TwinkleStar.fixtures_path()<>"150.png")
+      iex> TwinkleStar.from_bytes(bytes)
+    {:ok, %{media_type: "image/png"}}
   """
   @spec from_bytes(binary) :: {:ok, map} | {:error, term}
   def from_bytes(bytes) do
@@ -64,9 +64,9 @@ defmodule TwinkleStar do
     @doc """
     Attempt to fetch metadata from a URI, remote or local.
 
-    iex> TwinkleStar.from_uri("https://upload.wikimedia.org/wikipedia/commons/a/a9/US_Airways_A319-132_LAS_N838AW.jpg")
+      iex> TwinkleStar.from_uri("https://upload.wikimedia.org/wikipedia/commons/a/a9/US_Airways_A319-132_LAS_N838AW.jpg")
     {:ok, %{media_type: "image/jpeg"}}
-    iex> TwinkleStar.from_uri("http://xkcd.com", follow_redirect: true)
+      iex> TwinkleStar.from_uri("http://xkcd.com", follow_redirect: true)
     {:ok, %{media_type: "text/html"}}
     """
     @spec from_uri(URI.t() | binary, request_opts :: Keyword.t()) ::
