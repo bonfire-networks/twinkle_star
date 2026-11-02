@@ -26,7 +26,7 @@ defmodule TwinkleStar.MixProject do
       {:ex_marcel, "~> 0.2.0", optional: true},
       {:tree_magic,
        git: "https://github.com/bonfire-networks/tree_magic.ex", optional: true},
-      {:hackney, "~> 1.15", optional: true}
+      {:hackney, "~> 1.15 or ~> 4.9", optional: true}
     ]
   end
 end
